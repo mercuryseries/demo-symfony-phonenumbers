@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
+#[ORM\Table(name: 'employees')]
 class Employee
 {
     #[ORM\Id]
