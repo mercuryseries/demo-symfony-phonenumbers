@@ -12,7 +12,7 @@
     <hr>
 
     {% for employee in employees %}
-        <h3>Name: {{ employee.name }}</h3>
+        <h3># Employee {{ loop.index }}: {{ employee.name }}</h3>
         <p>National Format: {{ employee.phoneNumber|phone_number_format('INTERNATIONAL') }}</p>
         <p>International Format : {{ employee.phoneNumber|phone_number_format('NATIONAL') }}</p>
 
