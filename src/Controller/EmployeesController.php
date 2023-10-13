@@ -6,15 +6,17 @@ use App\Entity\Employee;
 use Symfony\Component\Intl\Countries;
 use libphonenumber\PhoneNumberFormat;
 use App\Repository\EmployeeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EmployeesController extends AbstractController
 {
-    #[Route('/employees', name: 'app_employees')]
+    #[Route('/', name: 'app_home')]
     public function index(EmployeeRepository $employeeRepo): Response
     {
         $employees = $employeeRepo->findAll();
@@ -23,9 +25,12 @@ class EmployeesController extends AbstractController
     }
 
     #[Route('/employees/create', name: 'app_employees_create')]
-    public function create(Request $request): Response
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createFormBuilder(new Employee)
+        $employee = new Employee;
+
+        $form = $this->createFormBuilder($employee)
+            ->add('name', TextType::class)
             ->add(
                 'phoneNumber',
                 PhoneNumberType::class,
@@ -41,7 +46,10 @@ class EmployeesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($form->getData());
+            $entityManager->persist($employee);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_home', status: Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('employees/create.html.twig', compact('form'));

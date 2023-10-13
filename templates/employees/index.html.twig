@@ -4,4 +4,18 @@
 
 {% block body %}
     <h1>Employees</h1>
+
+    <hr>
+
+    <a href="{{ path('app_employees_create') }}">Create Employee</a>
+
+    <hr>
+
+    {% for employee in employees %}
+        <h3>Name: {{ employee.name }}</h3>
+        <p>National Format: {{ employee.phoneNumber|phone_number_format('INTERNATIONAL') }}</p>
+        <p>International Format : {{ employee.phoneNumber|phone_number_format('NATIONAL') }}</p>
+
+        <hr>
+    {% endfor %}
 {% endblock %}
